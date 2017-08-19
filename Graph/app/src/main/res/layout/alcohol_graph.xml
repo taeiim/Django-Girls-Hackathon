@@ -62,7 +62,7 @@
 
         <EditText
             android:id="@+id/startdateEditText"
-            android:layout_width="100dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content" />
 
         <TextView
@@ -72,11 +72,11 @@
             android:layout_toRightOf="@+id/startdateEditText"
             android:padding="5dp"
             android:text="~"
-            android:textSize="25dp" />
+            android:textSize="20dp" />
 
         <EditText
             android:id="@+id/finishdateEditText"
-            android:layout_width="100dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/textView" />
 

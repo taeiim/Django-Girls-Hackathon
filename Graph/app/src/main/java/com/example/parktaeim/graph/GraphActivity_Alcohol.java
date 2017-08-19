@@ -1,11 +1,16 @@
 package com.example.parktaeim.graph;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -17,19 +22,28 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Array;
 import java.security.KeyStore;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnClickListener{
+public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener{
 
     private Context mContext;
     private List<Button> buttonList = null;
+    private EditText startDateEditText ;
+    private EditText finishDateEditText;
+    private int sYear,sMonth,sDay;
+    private int fYear,fMonth,fDay;
+    static final int DATE_ID = 0;
+    Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +51,8 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         setContentView(R.layout.alcohol_graph);
 
         RelativeLayout datePickerView = (RelativeLayout) findViewById(R.id.datePickerView);
+        startDateEditText =(EditText) findViewById(R.id.startdateEditText);
+        finishDateEditText = (EditText) findViewById(R.id.finishdateEditText);
         datePickerView.setVisibility(View.GONE);
 
         LineChartSet();
@@ -46,7 +62,53 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         mContext = GraphActivity_Alcohol.this;
         initSegmentbuttons();
 
+        startDateEditText.setInputType(0);
+        finishDateEditText.setInputType(0);
+        startDateEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(GraphActivity_Alcohol.this,dateSetListener,calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
+
+            }
+        });
     }
+
+    private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+            String msg = String.format("%d / %d / %d",year,monthOfYear+1,dayOfMonth);
+            startDateEditText.setText(msg);
+
+        }
+    };
+
+
+//    @Override
+//    public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+//        sYear = year;
+//        sMonth = monthOfYear;
+//        sDay = dayOfMonth;
+//        updateDisplay();
+//
+//    }
+//
+//
+//
+//    private void DateSet() {
+//        sYear = calendar.get(Calendar.YEAR);
+//        sMonth = calendar.get(Calendar.MONTH);
+//        sDay = calendar.get(Calendar.DAY_OF_MONTH);
+//
+//        startDateEditText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                new DatePickerDialog(GraphActivity_Alcohol.this,dateSetListener,sYear,sMonth,sDay).show();
+//            }
+//        });
+//    }
+
+
+
 
     private void ChartView() {
         final LineChart lineChart = (LineChart) findViewById(R.id.chart_alcohol);
@@ -88,10 +150,10 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         labels.add("fafe");
 
         ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(0f,0));
-        entries.add(new Entry(2f,1));
-        entries.add(new Entry(9f,2));
-        entries.add(new Entry(4f,3));
+        entries.add(new Entry(0,0f));
+        entries.add(new Entry(1,2f));
+        entries.add(new Entry(2,9f));
+        entries.add(new Entry(3,4f));
 
         LineDataSet dataSet = new LineDataSet(entries,"# of Calls");
         LineData data = new LineData(dataSet);
@@ -105,6 +167,8 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
 
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
 
+        lineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+
         lineChart.setVisibility(View.GONE);
 
     }
@@ -114,12 +178,12 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         BarChart barChart = (BarChart) findViewById(R.id.chart_alcohol_Bar);
 
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0f,0));
-        entries.add(new BarEntry(2f,1));
-        entries.add(new BarEntry(9f,2));
-        entries.add(new BarEntry(4f,3));
+        entries.add(new BarEntry(0,0f));
+        entries.add(new BarEntry(1,2f));
+        entries.add(new BarEntry(2,3f));
+        entries.add(new BarEntry(3,4f));
 
-        BarDataSet barDataSet = new BarDataSet(entries,"# of Calls");
+        BarDataSet barDataSet = new BarDataSet(entries,"Dates");
 
         ArrayList<String> labels = new ArrayList<>();
         labels.add("Jan");
@@ -140,10 +204,12 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
 
         barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         barChart.animateY(1000);
+        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
 
 
     }
 
+    //1주, 1개월, 3개월, 6개월, 직접 입력 SegmentedGroup
     private  void initSegmentbuttons(){
         buttonList = new ArrayList<>();
 
@@ -166,9 +232,39 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         buttonList.add(btnSelect);
     }
 
+
+    //SegmentedGroup 각각 클릭했을 때
     public void onClick(View view){
         RelativeLayout datePickerView = (RelativeLayout) findViewById(R.id.datePickerView);
         switch (view.getId()){
+            case R.id.buttonWeek:
+                datePickerView.setVisibility(View.GONE);
+                break;
+
+            case R.id.button1Month:
+                datePickerView.setVisibility(View.GONE);
+                break;
+
+            case R.id.button3Month:
+                datePickerView.setVisibility(View.GONE);
+                break;
+
+            case R.id.button6Month:
+                datePickerView.setVisibility(View.GONE);
+                break;
+
+            case R.id.buttonSelect:
+                datePickerView.setVisibility(View.VISIBLE);
+                break;
+
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+        RelativeLayout datePickerView = (RelativeLayout) findViewById(R.id.datePickerView);
+
+        switch (i){
             case R.id.buttonWeek:
                 datePickerView.setVisibility(View.GONE);
                 break;
