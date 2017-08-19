@@ -100,12 +100,13 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         ArrayList<String> labels = new ArrayList<String>();
 
         ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0,17f));
-        entries.add(new BarEntry(1,14f));
+        entries.add(new BarEntry(0, 1f));
+        entries.add(new BarEntry(1,2f));
         entries.add(new BarEntry(2,30f));
         entries.add(new BarEntry(3,4f));
         entries.add(new BarEntry(4,10f));
         entries.add(new BarEntry(5,6f));
+        entries.add(new BarEntry(6, 1f));
 
         //dateFormat
         String dateFormat = "MM-dd";
@@ -279,25 +280,20 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
 
     //SegmentedGroup 각각 클릭했을 때
     public void onClick(View view){
-        RelativeLayout datePickerView = (RelativeLayout) findViewById(R.id.datePickerView);
         switch (view.getId()){
             case R.id.buttonWeek:
-                datePickerView.setVisibility(View.GONE);
                 BarChartSet(iOneWeek);
                 break;
 
             case R.id.button1Month:
-                datePickerView.setVisibility(View.GONE);
                 BarChartSet(iOneMonth);
                 break;
 
             case R.id.button3Month:
-                datePickerView.setVisibility(View.GONE);
                 BarChartSet(i3Month);
                 break;
 
             case R.id.button6Month:
-                datePickerView.setVisibility(View.GONE);
                 BarChartSet(i6Month);
                 break;
 
@@ -307,8 +303,6 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-        RelativeLayout datePickerView = (RelativeLayout) findViewById(R.id.datePickerView);
-
         switch (i){
             case R.id.buttonWeek:
 
