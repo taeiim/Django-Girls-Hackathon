@@ -1,6 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context="com.example.parktaeim.graph.GraphActivity_Alcohol">
+
+    <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        segmentedgroup:sc_border_width="2dp"
+        segmentedgroup:sc_corner_radius="5dp"
+        segmentedgroup:sc_tint_color="#E0775F">
+
+        <RadioButton
+            android:id="@+id/buttonWeek"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1주일" />
+
+        <RadioButton
+            android:id="@+id/button1Month"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1개월" />
+
+        <RadioButton
+            android:id="@+id/button3Month"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3개월" />
+
+        <RadioButton
+            android:id="@+id/button6Month"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6개월" />
+
+        <RadioButton
+            android:id="@+id/buttonSelect"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="기간선택" />
+    </info.hoang8f.android.segmented.SegmentedGroup>
+
+    <RelativeLayout
+        android:id="@+id/datePickerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/startdateEditText"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/startdateEditText"
+            android:padding="5dp"
+            android:text="~"
+            android:textSize="25dp" />
+
+        <EditText
+            android:id="@+id/finishdateEditText"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/textView" />
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart_alcohol"
+            android:layout_width="match_parent"
+            android:layout_height="350dp">
+
+        </com.github.mikephil.charting.charts.LineChart>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/chart_alcohol_Bar"
+            android:layout_width="match_parent"
+            android:layout_height="350dp">
+
+        </com.github.mikephil.charting.charts.BarChart>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="230dp">
+
+        <Button
+            android:id="@+id/barBtn"
+            android:layout_width="50dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="20dp"
+            android:text="bar"
+            android:textSize="11dp" />
+
+        <Button
+            android:id="@+id/lineBtn"
+            android:layout_width="50dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/barBtn"
+            android:text="line"
+            android:textSize="11dp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="25dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="총 "
+            android:textSize="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="54000"
+            android:textSize="20dp"
+            android:textColor="#000000"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 원을 담뱃값으로 사용하셨습니다ㅠ_ㅠ" />
+
+    </LinearLayout>
 
 </LinearLayout>
