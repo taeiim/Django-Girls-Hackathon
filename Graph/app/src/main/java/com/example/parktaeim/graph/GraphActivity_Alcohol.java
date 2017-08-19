@@ -47,6 +47,8 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
     private List<Button> buttonList = null;
     Calendar calendar = Calendar.getInstance();
 
+    LineChart lineChart;
+    BarChart barChart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,18 +60,20 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
 
         initSegmentbuttons();
 
-
     }
 
 
 
 
     private void ChartView() {
-        final LineChart lineChart = (LineChart) findViewById(R.id.chart_alcohol);
-        final BarChart barChart = (BarChart) findViewById(R.id.chart_alcohol_Bar);
+
+        lineChart = (LineChart) findViewById(R.id.chart_alcohol);
+        barChart = (BarChart) findViewById(R.id.chart_alcohol_Bar);
 
         Button lineBtn = (Button) findViewById(R.id.lineBtn);
         Button barBtn = (Button) findViewById(R.id.barBtn);
+
+        lineChart.setVisibility(View.GONE);
 
         //line 버튼 클릭 시 꺾은선 그래프
         lineBtn.setOnClickListener(new View.OnClickListener() {
@@ -100,13 +104,13 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         ArrayList<String> labels = new ArrayList<String>();
 
         ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0, 1f));
-        entries.add(new BarEntry(1,2f));
-        entries.add(new BarEntry(2,30f));
-        entries.add(new BarEntry(3,4f));
-        entries.add(new BarEntry(4,10f));
-        entries.add(new BarEntry(5,6f));
-        entries.add(new BarEntry(6, 1f));
+        entries.add(new Entry(0, 5f));
+        entries.add(new Entry(1,2f));
+        entries.add(new Entry(2,15f));
+        entries.add(new Entry(3,4f));
+        entries.add(new Entry(4,10f));
+        entries.add(new Entry(5,6f));
+        entries.add(new Entry(6, 1f));
 
         //dateFormat
         String dateFormat = "MM-dd";
@@ -166,7 +170,6 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         //x축 글씨 세팅
         lineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-        lineChart.setVisibility(View.GONE);
 
     }
 
@@ -183,9 +186,9 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         BarChart barChart = (BarChart) findViewById(R.id.chart_alcohol_Bar);
 
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0, 1f));
+        entries.add(new BarEntry(0, 5f));
         entries.add(new BarEntry(1,2f));
-        entries.add(new BarEntry(2,30f));
+        entries.add(new BarEntry(2,15f));
         entries.add(new BarEntry(3,4f));
         entries.add(new BarEntry(4,10f));
         entries.add(new BarEntry(5,6f));
@@ -283,18 +286,22 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         switch (view.getId()){
             case R.id.buttonWeek:
                 BarChartSet(iOneWeek);
+                //LineChartSet(iOneWeek);
                 break;
 
             case R.id.button1Month:
                 BarChartSet(iOneMonth);
+                //LineChartSet(iOneMonth);
                 break;
 
             case R.id.button3Month:
                 BarChartSet(i3Month);
+                //LineChartSet(i3Month);
                 break;
 
             case R.id.button6Month:
                 BarChartSet(i6Month);
+                //LineChartSet(i6Month);
                 break;
 
 
@@ -305,7 +312,6 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
     public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
         switch (i){
             case R.id.buttonWeek:
-
                 break;
 
             case R.id.button1Month:
