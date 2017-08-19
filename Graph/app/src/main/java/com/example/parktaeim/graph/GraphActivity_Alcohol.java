@@ -42,15 +42,9 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
     final int iOneWeek = 1;
     final int iOneMonth = 2;
     final int i3Month = 3;
-    final int i6Month = 6;
+    final int i6Month = 4;
 
-    private Context mContext;
     private List<Button> buttonList = null;
-    private EditText startDateEditText ;
-    private EditText finishDateEditText;
-    private int sYear,sMonth,sDay;
-    private int fYear,fMonth,fDay;
-    static final int DATE_ID = 0;
     Calendar calendar = Calendar.getInstance();
 
     @Override
@@ -58,38 +52,15 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alcohol_graph);
 
-        RelativeLayout datePickerView = (RelativeLayout) findViewById(R.id.datePickerView);
-        startDateEditText =(EditText) findViewById(R.id.startdateEditText);
-        finishDateEditText = (EditText) findViewById(R.id.finishdateEditText);
-        datePickerView.setVisibility(View.GONE);
-
-        LineChartSet();
+        LineChartSet(iOneWeek);
         BarChartSet(iOneWeek);
         ChartView();
 
-        mContext = GraphActivity_Alcohol.this;
         initSegmentbuttons();
 
-        //EditText 클릭시 키보드 안나오게 (datePickerDialog 만 뜨게)
-        startDateEditText.setInputType(0);
-        finishDateEditText.setInputType(0);
-        startDateEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new DatePickerDialog(GraphActivity_Alcohol.this,dateSetListener,calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
 
-            }
-        });
     }
 
-    private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-            String msg = String.format("%d / %d / %d",year,monthOfYear+1,dayOfMonth);
-            startDateEditText.setText(msg);
-
-        }
-    };
 
 
 
@@ -122,17 +93,11 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
     }
 
     //꺾은선 그래프
-    private void LineChartSet() {
+    private void LineChartSet(int iMode) {
         LineChart lineChart = (LineChart) findViewById(R.id.chart_alcohol);
 
 
         ArrayList<String> labels = new ArrayList<String>();
-        labels.add("Jan");
-        labels.add("Feb");
-        labels.add("mar");
-        labels.add("fafe");
-        labels.add("may");
-        labels.add("june");
 
         ArrayList<Entry> entries = new ArrayList<>();
         entries.add(new BarEntry(0,17f));
@@ -142,20 +107,64 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         entries.add(new BarEntry(4,10f));
         entries.add(new BarEntry(5,6f));
 
+        //dateFormat
+        String dateFormat = "MM-dd";
+        String MonthFormat = "MM";
+
+        //캘린더 초기화 (초기화 안해주면 버튼 누를때마다 - 마이너스 됨
+        calendar = Calendar.getInstance();
+
+        // 1주, 1개월, 3개월, 6개월 그래프 마다 x축 설정
+        switch(iMode) {
+
+            case iOneWeek:
+                for(int i=0; i<7; i++) {
+                    //Log.i("aaaa", "test:"+calendar.getTime());
+                    labels.add(new SimpleDateFormat(dateFormat).format(calendar.getTime()));
+                    calendar.add(Calendar.DAY_OF_WEEK, -1);
+                }
+                break;
+
+            case iOneMonth:
+                for(int i=0; i<30; i++) {
+                    labels.add(new SimpleDateFormat(dateFormat).format(calendar.getTime()));
+                    calendar.add(Calendar.DAY_OF_WEEK, -1);
+                }
+                break;
+
+            case i3Month:
+                for(int i=0; i<12; i++) {
+                    labels.add(new SimpleDateFormat(dateFormat).format(calendar.getTime()));
+                    calendar.add(Calendar.WEEK_OF_MONTH, -1);
+                }
+                break;
+
+            case i6Month:
+                for(int i=0; i<6; i++) {
+                    labels.add(new SimpleDateFormat(MonthFormat).format(calendar.getTime()));
+                    calendar.add(Calendar.MONTH, -1);
+                }
+                break;
+
+
+        }
+
+
         LineDataSet dataSet = new LineDataSet(entries,"Dates");
         LineData data = new LineData(dataSet);
         lineChart.setData(data);
 
         XAxis xAxis = lineChart.getXAxis();
+        //x축 하단으로 (이거 안하면 x제목?  들이 위로 감)
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawAxisLine(true);
         xAxis.setDrawGridLines(true);
         lineChart.getAxisRight().setDrawLabels(false);
 
+        //그래프 색깔 컬러풀~
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-
+        //x축 글씨 세팅
         lineChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-
         lineChart.setVisibility(View.GONE);
 
     }
@@ -180,25 +189,6 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         entries.add(new BarEntry(4,10f));
         entries.add(new BarEntry(5,6f));
         entries.add(new BarEntry(6, 1f));
-//        entries.add(new BarEntry(7,2f));
-//        entries.add(new BarEntry(8,30f));
-//        entries.add(new BarEntry(9,4f));
-//        entries.add(new BarEntry(10,10f));
-//        entries.add(new BarEntry(11,6f));
-//        entries.add(new BarEntry(12, 1f));
-//        entries.add(new BarEntry(13,2f));
-//        entries.add(new BarEntry(14,30f));
-//        entries.add(new BarEntry(15,4f));
-//        entries.add(new BarEntry(16,10f));
-//        entries.add(new BarEntry(17,6f));
-//        entries.add(new BarEntry(18,10f));
-//        entries.add(new BarEntry(19,6f));
-//        entries.add(new BarEntry(20, 1f));
-//        entries.add(new BarEntry(21,2f));
-//        entries.add(new BarEntry(22,30f));
-//        entries.add(new BarEntry(23,4f));
-//        entries.add(new BarEntry(24,10f));
-//        entries.add(new BarEntry(25,6f));
 
         BarDataSet barDataSet = new BarDataSet(entries,"Dates");
 
@@ -274,19 +264,16 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         Button btn1Month = (Button) findViewById(R.id.button1Month);
         Button btn3Month = (Button) findViewById(R.id.button3Month);
         Button btn6Month = (Button) findViewById(R.id.button6Month);
-        Button btnSelect = (Button) findViewById(R.id.buttonSelect);
 
         btnWeek.setOnClickListener(this);
         btn1Month.setOnClickListener(this);
         btn3Month.setOnClickListener(this);
         btn6Month.setOnClickListener(this);
-        btnSelect.setOnClickListener(this);
 
         buttonList.add(btnWeek);
         buttonList.add(btn1Month);
         buttonList.add(btn3Month);
         buttonList.add(btn6Month);
-        buttonList.add(btnSelect);
     }
 
 
@@ -314,9 +301,6 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
                 BarChartSet(i6Month);
                 break;
 
-            case R.id.buttonSelect:
-                datePickerView.setVisibility(View.VISIBLE);
-                break;
 
         }
     }
@@ -339,8 +323,6 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
             case R.id.button6Month:
                 break;
 
-            case R.id.buttonSelect:
-                break;
 
         }
     }
