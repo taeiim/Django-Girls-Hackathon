@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -28,6 +29,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Array;
 import java.security.KeyStore;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,6 +37,12 @@ import java.util.List;
 import java.util.Map;
 
 public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener{
+
+
+    final int iOneWeek = 1;
+    final int iOneMonth = 2;
+    final int i3Month = 3;
+    final int i6Month = 6;
 
     private Context mContext;
     private List<Button> buttonList = null;
@@ -56,12 +64,13 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         datePickerView.setVisibility(View.GONE);
 
         LineChartSet();
-        BarChartSet();
+        BarChartSet(iOneWeek);
         ChartView();
 
         mContext = GraphActivity_Alcohol.this;
         initSegmentbuttons();
 
+        //EditText 클릭시 키보드 안나오게 (datePickerDialog 만 뜨게)
         startDateEditText.setInputType(0);
         finishDateEditText.setInputType(0);
         startDateEditText.setOnClickListener(new View.OnClickListener() {
@@ -81,32 +90,6 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
 
         }
     };
-
-
-//    @Override
-//    public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
-//        sYear = year;
-//        sMonth = monthOfYear;
-//        sDay = dayOfMonth;
-//        updateDisplay();
-//
-//    }
-//
-//
-//
-//    private void DateSet() {
-//        sYear = calendar.get(Calendar.YEAR);
-//        sMonth = calendar.get(Calendar.MONTH);
-//        sDay = calendar.get(Calendar.DAY_OF_MONTH);
-//
-//        startDateEditText.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new DatePickerDialog(GraphActivity_Alcohol.this,dateSetListener,sYear,sMonth,sDay).show();
-//            }
-//        });
-//    }
-
 
 
 
@@ -148,14 +131,18 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         labels.add("Feb");
         labels.add("mar");
         labels.add("fafe");
+        labels.add("may");
+        labels.add("june");
 
         ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(0,0f));
-        entries.add(new Entry(1,2f));
-        entries.add(new Entry(2,9f));
-        entries.add(new Entry(3,4f));
+        entries.add(new BarEntry(0,17f));
+        entries.add(new BarEntry(1,14f));
+        entries.add(new BarEntry(2,30f));
+        entries.add(new BarEntry(3,4f));
+        entries.add(new BarEntry(4,10f));
+        entries.add(new BarEntry(5,6f));
 
-        LineDataSet dataSet = new LineDataSet(entries,"# of Calls");
+        LineDataSet dataSet = new LineDataSet(entries,"Dates");
         LineData data = new LineData(dataSet);
         lineChart.setData(data);
 
@@ -173,23 +160,91 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
 
     }
 
+
+    private BarEntry calcTotal(int iNum, int iMode) {
+
+
+        return new BarEntry(1, 2f);
+    }
+
+
     //막대 그래프
-    private void BarChartSet() {
+    private void BarChartSet(int iMode) {
         BarChart barChart = (BarChart) findViewById(R.id.chart_alcohol_Bar);
 
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0,0f));
+        entries.add(new BarEntry(0, 1f));
         entries.add(new BarEntry(1,2f));
-        entries.add(new BarEntry(2,3f));
+        entries.add(new BarEntry(2,30f));
         entries.add(new BarEntry(3,4f));
+        entries.add(new BarEntry(4,10f));
+        entries.add(new BarEntry(5,6f));
+        entries.add(new BarEntry(6, 1f));
+//        entries.add(new BarEntry(7,2f));
+//        entries.add(new BarEntry(8,30f));
+//        entries.add(new BarEntry(9,4f));
+//        entries.add(new BarEntry(10,10f));
+//        entries.add(new BarEntry(11,6f));
+//        entries.add(new BarEntry(12, 1f));
+//        entries.add(new BarEntry(13,2f));
+//        entries.add(new BarEntry(14,30f));
+//        entries.add(new BarEntry(15,4f));
+//        entries.add(new BarEntry(16,10f));
+//        entries.add(new BarEntry(17,6f));
+//        entries.add(new BarEntry(18,10f));
+//        entries.add(new BarEntry(19,6f));
+//        entries.add(new BarEntry(20, 1f));
+//        entries.add(new BarEntry(21,2f));
+//        entries.add(new BarEntry(22,30f));
+//        entries.add(new BarEntry(23,4f));
+//        entries.add(new BarEntry(24,10f));
+//        entries.add(new BarEntry(25,6f));
 
         BarDataSet barDataSet = new BarDataSet(entries,"Dates");
 
         ArrayList<String> labels = new ArrayList<>();
-        labels.add("Jan");
-        labels.add("Feb");
-        labels.add("mar");
-        labels.add("fafe");
+
+        //dateFormat
+        String dateFormat = "MM-dd";
+        String MonthFormat = "MM";
+
+        //캘린더 초기화 (초기화 안해주면 버튼 누를때마다 - 마이너스 됨
+        calendar = Calendar.getInstance();
+
+        // 1주, 1개월, 3개월, 6개월 그래프 마다 x축 설정
+        switch(iMode) {
+
+            case iOneWeek:
+                for(int i=0; i<7; i++) {
+                    //Log.i("aaaa", "test:"+calendar.getTime());
+                    labels.add(new SimpleDateFormat(dateFormat).format(calendar.getTime()));
+                    calendar.add(Calendar.DAY_OF_WEEK, -1);
+                }
+                break;
+
+            case iOneMonth:
+                for(int i=0; i<30; i++) {
+                    labels.add(new SimpleDateFormat(dateFormat).format(calendar.getTime()));
+                    calendar.add(Calendar.DAY_OF_WEEK, -1);
+                }
+                break;
+
+            case i3Month:
+                for(int i=0; i<12; i++) {
+                    labels.add(new SimpleDateFormat(dateFormat).format(calendar.getTime()));
+                    calendar.add(Calendar.WEEK_OF_MONTH, -1);
+                }
+                break;
+
+            case i6Month:
+                for(int i=0; i<6; i++) {
+                    labels.add(new SimpleDateFormat(MonthFormat).format(calendar.getTime()));
+                    calendar.add(Calendar.MONTH, -1);
+                }
+                break;
+
+
+        }
 
 
         BarData barData = new BarData(barDataSet);
@@ -205,7 +260,9 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         barChart.animateY(1000);
         barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-
+        barChart.notifyDataSetChanged();
+        barChart.refreshDrawableState();
+        barChart.invalidate();
 
     }
 
@@ -239,18 +296,22 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
         switch (view.getId()){
             case R.id.buttonWeek:
                 datePickerView.setVisibility(View.GONE);
+                BarChartSet(iOneWeek);
                 break;
 
             case R.id.button1Month:
                 datePickerView.setVisibility(View.GONE);
+                BarChartSet(iOneMonth);
                 break;
 
             case R.id.button3Month:
                 datePickerView.setVisibility(View.GONE);
+                BarChartSet(i3Month);
                 break;
 
             case R.id.button6Month:
                 datePickerView.setVisibility(View.GONE);
+                BarChartSet(i6Month);
                 break;
 
             case R.id.buttonSelect:
@@ -266,23 +327,19 @@ public class GraphActivity_Alcohol extends AppCompatActivity implements View.OnC
 
         switch (i){
             case R.id.buttonWeek:
-                datePickerView.setVisibility(View.GONE);
+
                 break;
 
             case R.id.button1Month:
-                datePickerView.setVisibility(View.GONE);
                 break;
 
             case R.id.button3Month:
-                datePickerView.setVisibility(View.GONE);
                 break;
 
             case R.id.button6Month:
-                datePickerView.setVisibility(View.GONE);
                 break;
 
             case R.id.buttonSelect:
-                datePickerView.setVisibility(View.VISIBLE);
                 break;
 
         }
